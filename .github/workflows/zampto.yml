@@ -3,7 +3,7 @@ name: Zampto Renew
 on:
   workflow_dispatch: # 允许手动点按钮运行
   schedule:
-    - cron: '0 1 */2 * *'
+    - cron: '27 0 */2 * *'
 
 jobs:
   run_zampto_job:
@@ -26,7 +26,7 @@ jobs:
         chmod +x gost-linux-amd64-2.11.5
         mv gost-linux-amd64-2.11.5 gost
         # 启动转发：本地 8080 -> 你的 SOCKS5
-        nohup ./gost -L http://:8080 -F socks5://x:x@192.168.xxx.xxx:8001 > gost.log 2>&1 &
+        nohup ./gost -L http://:8080 -F socks5://Y5ICz4RqlK:nXubGnl4Wg@217.116.174.61:33333 > gost.log 2>&1 &
         sleep 3
         echo "测试本地代理..."
         curl -x http://127.0.0.1:8080 https://api.ipify.org -v
