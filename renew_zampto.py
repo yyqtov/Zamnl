@@ -70,8 +70,8 @@ def run_zampto():
             return
 
         # --- 6. 点击 View Server ---
-        print("[-] 寻找服务器按钮 (id=2711)...")
-        target_server_selector = 'a.server-btn[href*="id=2711"]'
+        print("[-] 寻找服务器按钮 (id=3810)...")
+        target_server_selector = 'a.server-btn[href*="id=3810"]'
         
         try:
             sb.wait_for_element_visible(target_server_selector, timeout=15)
