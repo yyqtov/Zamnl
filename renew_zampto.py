@@ -2,8 +2,8 @@ import time
 from seleniumbase import SB
 
 # ================= 配置区域 =================
-USERNAME = "xxxx@xxxx.gmail.com"
-PASSWORD = "mypassword"
+USERNAME = "sspn190253@gmail.com"
+PASSWORD = "6CExda9tPSVPRqG"
 LOCAL_PROXY = "http://127.0.0.1:8080"
 # ===========================================
 
