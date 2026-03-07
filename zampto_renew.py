@@ -20,7 +20,7 @@ LOGIN_URL   = "https://auth.zampto.net/sign-in?app_id=bmhk6c8qdqxphlyscztgl"
 DOMAIN      = "dash.zampto.net"
 
 TARGET_SERVERS = [
-    {"id": "2712", "name": "🇮🇹 Zampto IT"},
+    {"id": "3810", "name": "🇩🇪 Zampto DE"},
 ]
 
 # ============================================================
