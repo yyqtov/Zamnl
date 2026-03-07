@@ -1,50 +1,48 @@
 name: Zampto Renew
-
 on:
-  workflow_dispatch: # 允许手动点按钮运行
+  workflow_dispatch:
   schedule:
-    - cron: '27 0 */2 * *'
-
+    - cron: '41 3 */2 * *'   # 北京时间 09:00 运行（UTC+8 → UTC 01:00）
 jobs:
-  run_zampto_job:
+  run_zampto_renew:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: 📥 下载代码
-      uses: actions/checkout@v4
-
-    - name: 🐍 设置 Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-
-    # === 核心：启动 Gost 代理转发 (复制过来的成功配置) ===
-    - name: 🛡️ 启动 Gost 代理转发
-      run: |
-        wget https://github.com/ginuerzh/gost/releases/download/v2.11.5/gost-linux-amd64-2.11.5.gz
-        gunzip gost-linux-amd64-2.11.5.gz
-        chmod +x gost-linux-amd64-2.11.5
-        mv gost-linux-amd64-2.11.5 gost
-        # 启动转发：本地 8080 -> 你的 SOCKS5
-        nohup ./gost -L http://:8080 -F socks5://Y5ICz4RqlK:nXubGnl4Wg@217.116.174.61:33333 > gost.log 2>&1 &
-        sleep 3
-        echo "测试本地代理..."
-        curl -x http://127.0.0.1:8080 https://api.ipify.org -v
-
-    - name: 🛠️ 安装环境
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y google-chrome-stable xvfb
-        pip install seleniumbase
-        seleniumbase install chromedriver
-
-    - name: 🚀 运行 Zampto 脚本
-      run: |
-        xvfb-run -a python renew_zampto.py
-
-    - name: 📸 上传截图
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: zampto-screenshots
-        path: "*.png"
+      - name: 📥 下载代码
+        uses: actions/checkout@v4
+      - name: 🐍 设置 Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: 🛡️ 启动 Gost 代理转发
+        run: |
+          wget https://github.com/ginuerzh/gost/releases/download/v2.11.5/gost-linux-amd64-2.11.5.gz
+          gunzip gost-linux-amd64-2.11.5.gz
+          chmod +x gost-linux-amd64-2.11.5
+          mv gost-linux-amd64-2.11.5 gost
+          echo "启动 Gost 转发隧道..."
+          nohup ./gost -L http://:8080 -F socks5://Y5ICz4RqlK:nXubGnl4Wg@217.116.174.61:33333 > gost.log 2>&1 &
+          sleep 3
+          echo "测试本地代理连通性..."
+          curl -x http://127.0.0.1:8080 https://api.ipify.org -v
+      - name: 🛠️ 安装系统依赖
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            google-chrome-stable \
+            xvfb \
+            x11-utils \
+            xdotool \
+            scrot
+      - name: 🐍 安装 Python 依赖
+        run: |
+          pip install seleniumbase requests
+          seleniumbase install chromedriver
+      - name: 🚀 运行脚本
+        run: |
+          xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" python zampto_renew.py
+      - name: 📸 上传截图
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-screenshots
+          path: "*.png"
